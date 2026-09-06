@@ -845,6 +845,102 @@ public class Solution {
         expected: "5"
       }
     ]
+  },
+  {
+    id: 11,
+    title: "Question 11 — Minimum Operations to Make Characters Identical",
+    difficulty: "EASY",
+    concept: "Strings & Frequency Counting",
+    description: "Given a string s, you have to make all characters in the string identical. In one operation, you can replace any character in the string with any other character. What is the minimum number of operations required to make all characters in the string identical?",
+    inputSpec: [
+      "Line 1: A single string s consisting of alphanumeric or printable characters."
+    ],
+    outputSpec: "Print a single integer representing the minimum number of operations required to make all characters in the string identical.",
+    examples: [
+      {
+        input: "aab",
+        output: "1",
+        explanation: "Replace 'b' with 'a' to get 'aaa' where all characters are identical. Exactly 1 operation is required."
+      },
+      {
+        input: "abcde",
+        output: "4",
+        explanation: "All 5 characters are distinct. Choosing one character to keep and replacing the other 4 characters requires 4 operations."
+      },
+      {
+        input: "aaaa",
+        output: "0",
+        explanation: "All characters in the string are already identical. 0 operations are required."
+      }
+    ],
+    constraints: [
+      "1 <= length of s <= 100,000",
+      "s consists of letters, digits, or standard printable characters without whitespace"
+    ],
+    starterCode: {
+      python: `import sys
+
+def main():
+    # Read input from standard input:
+    # Line 1: A single string s
+    raw = sys.stdin.read().strip()
+    if not raw:
+        print(0)
+        return
+
+    # TODO: Write your solution from scratch
+    pass
+
+if __name__ == '__main__':
+    main()
+`,
+      java: `import java.util.*;
+import java.io.*;
+
+public class Solution {
+    public static void main(String[] args) throws Exception {
+        // Read input from standard input:
+        // Line 1: A single string s
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        String s = br.readLine();
+        if (s == null || s.trim().isEmpty()) {
+            System.out.println(0);
+            return;
+        }
+        s = s.trim();
+
+        // TODO: Write your solution from scratch
+    }
+}
+`
+    },
+    tests: [
+      {
+        name: "Test Case 1 (Example 1: Single Replacement)",
+        input: "aab",
+        expected: "1"
+      },
+      {
+        name: "Test Case 2 (Example 2: All Distinct Characters)",
+        input: "abcde",
+        expected: "4"
+      },
+      {
+        name: "Test Case 3 (Example 3: Already All Identical)",
+        input: "aaaa",
+        expected: "0"
+      },
+      {
+        name: "Test Case 4 (Single Character String)",
+        input: "z",
+        expected: "0"
+      },
+      {
+        name: "Test Case 5 (Repeated Multi-Character String)",
+        input: "abacaba",
+        expected: "3"
+      }
+    ]
   }
 ];
 

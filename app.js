@@ -132,7 +132,7 @@
       if (res.ok) {
         allProblemsList = await res.json();
       } else {
-        allProblemsList = Array.from({ length: 10 }, (_, i) => ({
+        allProblemsList = Array.from({ length: 11 }, (_, i) => ({
           id: i + 1,
           title: `Question ${i + 1}`,
           difficulty: i < 2 ? 'EASY' : i < 6 ? 'MEDIUM' : i < 8 ? 'MEDIUM-HARD' : 'HARD',
@@ -820,7 +820,7 @@
       const match = window.location.hash.match(/q=(\d+)/);
       if (match && match[1]) {
         const id = parseInt(match[1], 10);
-        if (id !== currentProblemId && id >= 1 && id <= (allProblemsList.length || 10)) {
+        if (id !== currentProblemId && id >= 1 && id <= (allProblemsList.length || 11)) {
           switchProblem(id);
         }
       }
@@ -871,16 +871,17 @@
   async function init() {
     initEventListeners();
 
+    await loadProblemsList();
+
     // Check hash for starting problem
     const match = window.location.hash.match(/q=(\d+)/);
     if (match && match[1]) {
       const parsed = parseInt(match[1], 10);
-      if (parsed >= 1 && parsed <= 10) {
+      if (parsed >= 1 && parsed <= allProblemsList.length) {
         currentProblemId = parsed;
       }
     }
 
-    await loadProblemsList();
     renderNavigation();
     await loadProblem(currentProblemId);
   }
