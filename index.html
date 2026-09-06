@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Accenture 2027 DSA Coding Arena | Question 1: Missing Roll Number</title>
+  <meta name="description" content="Practice real Accenture DSA interview questions in Python and Java with instant compilation, custom I/O execution, and strict assessment test suites.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Top Navigation Bar -->
+  <header class="navbar">
+    <div class="brand-group">
+      <div class="brand-badge">⚡ ACCENTURE 2027</div>
+      <div class="brand-title">
+        <h1>DSA Coding Practice Arena</h1>
+        <span class="series-tag">Real-Exam 10 Story Problems</span>
+      </div>
+    </div>
+
+    <!-- Center: Active Question Pill & Language Switcher -->
+    <div class="nav-center">
+      <div class="problem-status-pill">
+        <span class="pulse-dot"></span>
+        <span class="problem-number" id="problemNumberBadge">Question 1 of 10</span>
+        <span class="divider">•</span>
+        <span class="problem-difficulty" id="difficultyBadge">EASY</span>
+      </div>
+
+      <div class="lang-switcher" role="tablist" aria-label="Programming Language">
+        <button class="lang-btn active" data-lang="python" id="btnLangPython" title="Python 3.13">
+          <span class="lang-icon">🐍</span> Python 3
+        </button>
+        <button class="lang-btn" data-lang="java" id="btnLangJava" title="Java 24">
+          <span class="lang-icon">☕</span> Java 24
+        </button>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="nav-actions">
+      <button id="resetBtn" class="btn btn-secondary" title="Reset current editor code to starter template">
+        <span>🔄</span> Reset
+      </button>
+      <button id="runCustomBtn" class="btn btn-secondary" title="Execute code with custom stdin input">
+        <span>▶</span> Run Custom
+      </button>
+      <button id="runTestsBtn" class="btn btn-primary" title="Execute assessment test suite">
+        <span>🚀</span> Run & Test Solution
+      </button>
+    </div>
+  </header>
+
+  <!-- Question Navigation Strip -->
+  <nav class="problem-nav-strip" aria-label="Question Navigation">
+    <div class="nav-strip-left">
+      <button id="prevProblemBtn" class="nav-arrow-btn" title="Previous Question (Ctrl+Left)">
+        <span class="arrow-icon">◀</span>
+        <span class="arrow-label">Prev</span>
+      </button>
+    </div>
+
+    <div class="problem-pills-carousel" id="problemPillsContainer" role="tablist">
+      <!-- 10 Question Pills rendered dynamically -->
+    </div>
+
+    <div class="nav-strip-right">
+      <button id="nextProblemBtn" class="nav-arrow-btn" title="Next Question (Ctrl+Right)">
+        <span class="arrow-label">Next</span>
+        <span class="arrow-icon">▶</span>
+      </button>
+      <div class="quick-jump-wrapper">
+        <label for="problemQuickSelect" class="sr-only">Jump to question</label>
+        <select id="problemQuickSelect" class="quick-jump-select" title="Jump directly to question">
+          <!-- Populated dynamically -->
+        </select>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Split Layout -->
+  <div class="app-layout">
+    
+    <!-- Left Column: Problem Details, Test Verification, and Custom I/O -->
+    <aside class="sidebar-panel">
+      <!-- Sidebar Navigation Tabs -->
+      <div class="sidebar-tabs" role="tablist">
+        <button class="side-tab-btn active" data-tab="description" id="tabBtnDesc">
+          <span class="tab-icon">📋</span> Problem
+        </button>
+        <button class="side-tab-btn" data-tab="tests" id="tabBtnTests">
+          <span class="tab-icon">🧪</span> Test Results
+          <span class="badge-counter" id="testBadgeCounter">0/5</span>
+        </button>
+        <button class="side-tab-btn" data-tab="customio" id="tabBtnCustomIo">
+          <span class="tab-icon">⌨</span> Custom I/O
+        </button>
+      </div>
+
+      <div class="sidebar-content">
+        <!-- Tab 1: Problem Description -->
+        <div class="tab-view active" id="viewDescription">
+          <div class="panel-header">
+            <div class="task-meta">
+              <span class="badge category-badge" id="conceptBadge">Array Searching & Numbers</span>
+              <span class="badge difficulty-badge easy" id="panelDifficultyBadge">EASY</span>
+            </div>
+            <h2 id="taskTitle" class="task-title">Question 1 — Missing Roll Number</h2>
+          </div>
+
+          <!-- Story & Problem Description -->
+          <div class="section-card">
+            <h3 class="section-heading"><span class="icon">📖</span> Problem Statement</h3>
+            <p id="problemStory" class="story-text">
+              Ravi is a class monitor responsible for attendance. He has a list of roll numbers of students who submitted their assignment, out of n total students numbered 1 to n. Exactly ONE student did not submit. Given the list and the value of n, find the roll number of the student who did NOT submit.
+            </p>
+          </div>
+
+          <!-- Input Specification -->
+          <div class="section-card">
+            <h3 class="section-heading"><span class="icon">📥</span> Input Specification</h3>
+            <ul class="spec-list" id="inputSpecList">
+              <li>Line 1: Space-separated integers representing the roll numbers who submitted.</li>
+              <li>Line 2: An integer n, the total number of students (numbered 1 to n).</li>
+            </ul>
+          </div>
+
+          <!-- Output Specification -->
+          <div class="section-card">
+            <h3 class="section-heading"><span class="icon">📤</span> Output Specification</h3>
+            <p id="outputSpecText" class="spec-text">
+              Print a single integer representing the missing roll number to standard output.
+            </p>
+          </div>
+
+          <!-- Worked Examples -->
+          <div class="section-card">
+            <h3 class="section-heading"><span class="icon">💡</span> Worked Examples</h3>
+            <div id="examplesContainer" class="examples-container">
+              <!-- Example cards populated dynamically -->
+            </div>
+          </div>
+
+          <!-- Constraints -->
+          <div class="section-card">
+            <h3 class="section-heading"><span class="icon">⚠️</span> Constraints</h3>
+            <ul class="constraints-list" id="constraintsList">
+              <li>1 &le; n &le; 100,000</li>
+              <li>List contains exactly n - 1 distinct integers</li>
+              <li>All roll numbers are in the range [1, n]</li>
+              <li>Exactly one roll number is missing</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Tab 2: Test Results & Verification -->
+        <div class="tab-view" id="viewTests">
+          <div class="tests-header">
+            <div class="tests-title-group">
+              <h3>Test Verification Results</h3>
+              <p class="tests-subtitle">Evaluation against assessment test cases</p>
+            </div>
+            <span class="test-counter" id="testSummaryBadge">0 / 5 Passed</span>
+          </div>
+
+          <!-- Progress Bar -->
+          <div class="test-progress-bar-wrapper">
+            <div class="test-progress-bar" id="testProgressBar" style="width: 0%;"></div>
+          </div>
+
+          <div class="test-results-container" id="testResultsList">
+            <div class="empty-tests-state">
+              <span class="empty-icon">🧪</span>
+              <p>Click <strong>"Run & Test Solution"</strong> to compile and evaluate your code against the full assessment test suite.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 3: Custom I/O Console -->
+        <div class="tab-view" id="viewCustomIo">
+          <div class="custom-io-section">
+            <div class="io-box">
+              <div class="io-header">
+                <span class="io-label">Standard Input (stdin)</span>
+                <span class="io-hint">Provide inputs for your program</span>
+              </div>
+              <textarea id="customStdin" class="io-textarea" placeholder="1 2 4 5 6&#10;6" rows="5"></textarea>
+            </div>
+
+            <button id="runCustomFromTabBtn" class="btn btn-primary full-width">
+              <span>▶</span> Execute Custom Input
+            </button>
+
+            <div class="io-box">
+              <div class="io-header">
+                <span class="io-label">Standard Output (stdout)</span>
+                <span id="customExecMeta" class="exec-meta">Not executed yet</span>
+              </div>
+              <pre id="customStdout" class="io-preview empty-stdout">Output will appear here after execution...</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Right Column: Code Editor & Bottom Terminal Drawer -->
+    <main class="main-editor-area">
+      <!-- Editor Section -->
+      <section class="editor-section">
+        <!-- Editor Header Bar -->
+        <div class="editor-header">
+          <div class="editor-file-info">
+            <span class="file-icon" id="editorFileIcon">📄</span>
+            <span class="file-name" id="editorFileName">solution.py</span>
+            <span class="editor-scratch-badge">Write from scratch</span>
+          </div>
+          <div class="editor-status">
+            <span id="activeLangDisplay" class="lang-tag">Python 3.13</span>
+            <span class="editor-hint">Tab key inserts 4 spaces</span>
+          </div>
+        </div>
+
+        <!-- Code Input with Line Numbers -->
+        <div class="code-editor-container">
+          <div class="line-numbers" id="lineNumbers" aria-hidden="true">1</div>
+          <textarea 
+            id="codeEditor" 
+            class="code-textarea" 
+            spellcheck="false" 
+            autocomplete="off" 
+            autocorrect="off" 
+            autocapitalize="off"
+            placeholder="Write your complete solution from scratch..."
+          ></textarea>
+        </div>
+      </section>
+
+      <!-- Bottom Console / Terminal Drawer -->
+      <section class="console-drawer" id="consoleDrawer">
+        <div class="console-header">
+          <div class="console-title">
+            <span class="terminal-dot green"></span>
+            <span class="terminal-dot yellow"></span>
+            <span class="terminal-dot red"></span>
+            <span class="console-label">Execution Terminal & Compiler Diagnostics</span>
+          </div>
+          <div class="console-actions">
+            <span id="consoleStatus" class="console-status-text">Ready</span>
+            <button id="clearConsoleBtn" class="icon-btn" title="Clear Console">
+              <span>🗑️</span> Clear
+            </button>
+            <button id="toggleConsoleBtn" class="icon-btn" title="Toggle Drawer">
+              <span id="toggleConsoleIcon">▼</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="console-body" id="consoleBody">
+          <pre id="consoleOutput" class="terminal-output">Ready. Write your code from scratch and click "Run Custom" or "Run & Test Solution".</pre>
+        </div>
+      </section>
+    </main>
+
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

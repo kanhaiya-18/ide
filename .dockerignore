@@ -1,0 +1,4 @@
+temp_runs/
+.git/
+node_modules/
+*.log

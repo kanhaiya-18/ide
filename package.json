@@ -1,0 +1,19 @@
+{
+  "name": "accenture-dsa-practice",
+  "version": "1.0.0",
+  "description": "Accenture 2027 DSA Coding Practice Arena with live Python and Java execution",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": [
+    "accenture",
+    "dsa",
+    "interview-practice",
+    "python",
+    "java"
+  ],
+  "author": "",
+  "license": "ISC"
+}
