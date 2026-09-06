@@ -12,6 +12,10 @@ if (!fs.existsSync(TEMP_BASE_DIR)) {
   fs.mkdirSync(TEMP_BASE_DIR, { recursive: true });
 }
 
+const PYTHON_CMD = process.platform === 'win32'
+  ? 'python'
+  : (fs.existsSync('/usr/bin/python3') ? 'python3' : 'python');
+
 /**
  * Execute Python code in isolated temp directory
  */
@@ -25,7 +29,7 @@ function runPythonCode(code, stdinInput, timeoutMs = 6000) {
     fs.writeFileSync(scriptPath, code, 'utf8');
 
     const startTime = Date.now();
-    const proc = spawn('python', ['solution.py'], {
+    const proc = spawn(PYTHON_CMD, ['solution.py'], {
       cwd: runDir,
       windowsHide: true
     });

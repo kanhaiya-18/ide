@@ -1,13 +1,17 @@
 # Production Dockerfile for Accenture DSA Practice Arena
-# Includes Node.js (v20), Python 3, and OpenJDK 17 (javac & JVM)
+# Includes Node.js (v20), Python 3, and OpenJDK (javac & JVM)
 
-FROM node:20-bullseye-slim
+FROM node:20-bookworm-slim
 
-# Install Python 3 and OpenJDK
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    python3 \
-    openjdk-17-jdk-headless \
-    && ln -s /usr/bin/python3 /usr/bin/python \
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Install Python 3, python-is-python3 symlink, and OpenJDK headless
+RUN mkdir -p /usr/share/man/man1 && \
+    apt-get update && \
+    apt-get install -y --no-install-recommends \
+        python3 \
+        python-is-python3 \
+        default-jdk-headless \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
@@ -22,3 +26,4 @@ ENV PORT=3005
 EXPOSE 3005
 
 CMD ["node", "server.js"]
+
