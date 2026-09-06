@@ -58,6 +58,8 @@
 
   const codeEditor = document.getElementById('codeEditor');
   const lineNumbers = document.getElementById('lineNumbers');
+  const syntaxHighlightLayer = document.getElementById('syntaxHighlightLayer');
+  const syntaxHighlightCode = document.getElementById('syntaxHighlightCode');
 
   // DOM Elements — Action Buttons
   const resetBtn = document.getElementById('resetBtn');
@@ -342,6 +344,7 @@
     }
 
     updateLineNumbers();
+    updateSyntaxHighlight();
   }
 
   /**
@@ -382,6 +385,7 @@
     }
 
     updateLineNumbers();
+    updateSyntaxHighlight();
     codeEditor.focus();
   }
 
@@ -414,23 +418,151 @@
   }
 
   /**
-   * Handle Tab key in editor (insert 4 spaces)
+   * Real-time Syntax Highlighter for Python & Java
+   */
+  function highlightSyntax(code, lang) {
+    if (!code) return '';
+
+    const isPython = lang === 'python';
+
+    const regex = isPython
+      ? /(#.*$)|("""[\s\S]*?"""|'''[\s\S]*?'''|"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*')|(\b\d+(?:\.\d+)?\b)|(\b(?:def|class|return|if|elif|else|for|while|in|not|and|or|is|import|from|as|try|except|finally|raise|with|pass|break|continue|yield|lambda|None|True|False)\b)|(\b(?:int|float|str|bool|list|dict|set|tuple|len|range|enumerate|zip|min|max|sum|abs|sorted|map|filter|print|input|type|isinstance)\b)|(\b[a-zA-Z_]\w*(?=\s*\())|([+\-*/%=!<>]=?|->|:)/gm
+      : /(\/\/.*$|\/\*[\s\S]*?\*\/)|("(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*')|(\b\d+(?:\.\d+)?\b)|(\b(?:public|private|protected|static|final|class|interface|enum|extends|implements|new|return|if|else|for|while|do|switch|case|default|break|continue|try|catch|finally|throw|throws|import|package|this|super|instanceof|null|true|false)\b)|(\b(?:int|long|double|float|char|byte|short|boolean|void|String|Integer|Long|Double|Boolean|Scanner|System|Math|List|ArrayList|Map|HashMap|Set|HashSet|Queue|Deque|ArrayDeque|Arrays|Collections|StringBuilder|BufferedReader|InputStreamReader)\b)|(\b[a-zA-Z_]\w*(?=\s*\())|([+\-*/%=!<>]=?|::|->)/gm;
+
+    let lastIndex = 0;
+    let result = '';
+    let match;
+
+    while ((match = regex.exec(code)) !== null) {
+      if (match.index > lastIndex) {
+        result += escapeHtml(code.slice(lastIndex, match.index));
+      }
+
+      const matchedText = escapeHtml(match[0]);
+      if (match[1]) {
+        result += `<span class="syn-comment">${matchedText}</span>`;
+      } else if (match[2]) {
+        result += `<span class="syn-string">${matchedText}</span>`;
+      } else if (match[3]) {
+        result += `<span class="syn-number">${matchedText}</span>`;
+      } else if (match[4]) {
+        result += `<span class="syn-keyword">${matchedText}</span>`;
+      } else if (match[5]) {
+        result += `<span class="syn-type">${matchedText}</span>`;
+      } else if (match[6]) {
+        result += `<span class="syn-func">${matchedText}</span>`;
+      } else if (match[7]) {
+        result += `<span class="syn-operator">${matchedText}</span>`;
+      } else {
+        result += matchedText;
+      }
+
+      lastIndex = regex.lastIndex;
+    }
+
+    if (lastIndex < code.length) {
+      result += escapeHtml(code.slice(lastIndex));
+    }
+
+    return result;
+  }
+
+  /**
+   * Refresh syntax highlight display
+   */
+  function updateSyntaxHighlight() {
+    if (!syntaxHighlightCode) return;
+    const code = codeEditor.value;
+    syntaxHighlightCode.innerHTML = highlightSyntax(code, activeLang) + (code.endsWith('\n') ? ' ' : '');
+  }
+
+  /**
+   * Handle Smart Auto-Indentation on Enter, Tab, and Backspace
    */
   function handleEditorKeyDown(e) {
-    if (e.key === 'Tab') {
+    const start = codeEditor.selectionStart;
+    const end = codeEditor.selectionEnd;
+    const val = codeEditor.value;
+
+    // 1. Enter Key: Smart Auto-Indentation (cursor goes inside block for Python ':' and Java '{')
+    if (e.key === 'Enter') {
       e.preventDefault();
-      const start = codeEditor.selectionStart;
-      const end = codeEditor.selectionEnd;
-      const val = codeEditor.value;
-      const indent = '    '; // 4 spaces
-      
-      codeEditor.value = val.substring(0, start) + indent + val.substring(end);
-      codeEditor.selectionStart = codeEditor.selectionEnd = start + indent.length;
-      
+
+      // Find current line up to cursor
+      const lastNewline = val.lastIndexOf('\n', start - 1);
+      const lineStart = lastNewline === -1 ? 0 : lastNewline + 1;
+      const currentLine = val.substring(lineStart, start);
+
+      // Extract existing indentation
+      const indentMatch = currentLine.match(/^[ \t]*/);
+      let indent = indentMatch ? indentMatch[0] : '';
+
+      // Check if line before cursor triggers increased indentation:
+      // In Python: line ends with ':'
+      // In Java: line ends with '{' or ':'
+      const trimmed = currentLine.trim();
+      const shouldIndentInner = (activeLang === 'python' && trimmed.endsWith(':')) ||
+                                (activeLang === 'java' && (trimmed.endsWith('{') || trimmed.endsWith(':')));
+
+      if (shouldIndentInner) {
+        indent += '    '; // Move cursor into the inner block
+      }
+
+      const insertion = '\n' + indent;
+      codeEditor.value = val.substring(0, start) + insertion + val.substring(end);
+      codeEditor.selectionStart = codeEditor.selectionEnd = start + insertion.length;
+
       if (currentProblem) {
         saveCodeToCache(currentProblem.id, activeLang, codeEditor.value);
       }
       updateLineNumbers();
+      updateSyntaxHighlight();
+      return;
+    }
+
+    // 2. Tab Key: Insert 4 spaces (or unindent with Shift+Tab)
+    if (e.key === 'Tab') {
+      e.preventDefault();
+      if (e.shiftKey) {
+        const lastNewline = val.lastIndexOf('\n', start - 1);
+        const lineStart = lastNewline === -1 ? 0 : lastNewline + 1;
+        if (val.substring(lineStart, lineStart + 4) === '    ') {
+          codeEditor.value = val.substring(0, lineStart) + val.substring(lineStart + 4);
+          codeEditor.selectionStart = Math.max(lineStart, start - 4);
+          codeEditor.selectionEnd = Math.max(lineStart, end - 4);
+        }
+      } else {
+        const indent = '    ';
+        codeEditor.value = val.substring(0, start) + indent + val.substring(end);
+        codeEditor.selectionStart = codeEditor.selectionEnd = start + indent.length;
+      }
+
+      if (currentProblem) {
+        saveCodeToCache(currentProblem.id, activeLang, codeEditor.value);
+      }
+      updateLineNumbers();
+      updateSyntaxHighlight();
+      return;
+    }
+
+    // 3. Backspace Key: Smart 4-space unindent
+    if (e.key === 'Backspace' && start === end) {
+      const lastNewline = val.lastIndexOf('\n', start - 1);
+      const lineStart = lastNewline === -1 ? 0 : lastNewline + 1;
+      const lineBeforeCursor = val.substring(lineStart, start);
+
+      if (lineBeforeCursor.length > 0 && /^[ ]+$/.test(lineBeforeCursor) && lineBeforeCursor.length % 4 === 0) {
+        e.preventDefault();
+        codeEditor.value = val.substring(0, start - 4) + val.substring(end);
+        codeEditor.selectionStart = codeEditor.selectionEnd = start - 4;
+
+        if (currentProblem) {
+          saveCodeToCache(currentProblem.id, activeLang, codeEditor.value);
+        }
+        updateLineNumbers();
+        updateSyntaxHighlight();
+        return;
+      }
     }
   }
 
@@ -446,6 +578,7 @@
     codeEditor.value = starter;
     saveCodeToCache(currentProblem.id, activeLang, starter);
     updateLineNumbers();
+    updateSyntaxHighlight();
 
     consoleOutput.textContent = `Reset Question ${currentProblem.id} (${activeLang.toUpperCase()}) code to initial starter template.`;
     consoleOutput.className = 'terminal-output';
@@ -708,10 +841,15 @@
         saveCodeToCache(currentProblem.id, activeLang, codeEditor.value);
       }
       updateLineNumbers();
+      updateSyntaxHighlight();
     });
     codeEditor.addEventListener('keydown', handleEditorKeyDown);
     codeEditor.addEventListener('scroll', () => {
       lineNumbers.scrollTop = codeEditor.scrollTop;
+      if (syntaxHighlightLayer) {
+        syntaxHighlightLayer.scrollTop = codeEditor.scrollTop;
+        syntaxHighlightLayer.scrollLeft = codeEditor.scrollLeft;
+      }
     });
 
     // Action buttons

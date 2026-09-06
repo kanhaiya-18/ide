@@ -945,7 +945,7 @@ html, body {
   color: var(--text-muted);
 }
 
-/* Code Editor Container */
+/* Code Editor & Syntax Highlighting Layer */
 .code-editor-container {
   flex: 1;
   display: flex;
@@ -960,28 +960,106 @@ html, body {
   border-right: 1px solid var(--border-subtle);
   color: #475569;
   font-family: var(--font-mono);
-  font-size: 13px;
+  font-size: 13.5px;
   line-height: 22px;
   padding: 16px 8px 16px 0;
   text-align: right;
   user-select: none;
   overflow: hidden;
+  flex-shrink: 0;
+}
+
+.editor-code-wrapper {
+  position: relative;
+  flex: 1;
+  height: 100%;
+  overflow: hidden;
+  background: var(--bg-editor);
+}
+
+.syntax-highlight-layer,
+.code-textarea {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 16px 20px;
+  border: none;
+  font-family: var(--font-mono);
+  font-size: 13.5px;
+  font-weight: 400;
+  line-height: 22px;
+  tab-size: 4;
+  -moz-tab-size: 4;
+  white-space: pre;
+  word-wrap: normal;
+  box-sizing: border-box;
+}
+
+.syntax-highlight-layer {
+  pointer-events: none;
+  z-index: 1;
+  background: transparent;
+  color: #e2e8f0;
+  overflow: hidden;
+}
+
+.syntax-highlight-layer code {
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+  white-space: inherit;
+  display: block;
 }
 
 .code-textarea {
-  flex: 1;
+  z-index: 2;
   background: transparent;
-  border: none;
+  color: transparent;
+  caret-color: #38bdf8;
   outline: none;
-  color: var(--text-code);
-  font-family: var(--font-mono);
-  font-size: 13px;
-  line-height: 22px;
-  padding: 16px 20px;
   resize: none;
-  white-space: pre;
-  tab-size: 4;
   overflow: auto;
+}
+
+.code-textarea::selection {
+  background: rgba(99, 102, 241, 0.4);
+  color: transparent;
+}
+
+/* Syntax Token Colors (VS Code Dark / One Dark Premium Theme) */
+.syn-keyword {
+  color: #c084fc; /* Purple/Violet: def, class, return, if, for, while, public, static */
+  font-weight: 500;
+}
+
+.syn-type {
+  color: #38bdf8; /* Cyan: int, str, list, print, Scanner, System, Math */
+}
+
+.syn-string {
+  color: #34d399; /* Mint Green: 'single', "double", """triple""" */
+}
+
+.syn-number {
+  color: #fbbf24; /* Amber Gold: numbers */
+}
+
+.syn-comment {
+  color: #64748b; /* Slate Gray: # comments, // comments */
+  font-style: italic;
+}
+
+.syn-func {
+  color: #60a5fa; /* Soft Blue: function definition & call */
+  font-weight: 500;
+}
+
+.syn-operator {
+  color: #f43f5e; /* Coral/Rose: =, +, -, *, :, ==, != */
 }
 
 /* Bottom Console Drawer */

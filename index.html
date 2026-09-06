@@ -223,18 +223,21 @@
           </div>
         </div>
 
-        <!-- Code Input with Line Numbers -->
+        <!-- Code Input with Line Numbers & Real-time Syntax Highlighting -->
         <div class="code-editor-container">
           <div class="line-numbers" id="lineNumbers" aria-hidden="true">1</div>
-          <textarea 
-            id="codeEditor" 
-            class="code-textarea" 
-            spellcheck="false" 
-            autocomplete="off" 
-            autocorrect="off" 
-            autocapitalize="off"
-            placeholder="Write your complete solution from scratch..."
-          ></textarea>
+          <div class="editor-code-wrapper">
+            <pre class="syntax-highlight-layer" id="syntaxHighlightLayer" aria-hidden="true"><code id="syntaxHighlightCode"></code></pre>
+            <textarea 
+              id="codeEditor" 
+              class="code-textarea" 
+              spellcheck="false" 
+              autocomplete="off" 
+              autocorrect="off" 
+              autocapitalize="off"
+              placeholder="Write your complete solution from scratch..."
+            ></textarea>
+          </div>
         </div>
       </section>
 
