@@ -302,6 +302,24 @@ function normalizePairOutput(raw) {
 }
 
 /**
+ * Helper to normalize (big, small) pair output (e.g. "(5, 3)", "(5,3)", "5 3", or "No Pair")
+ */
+function normalizeBigSmallPairOutput(raw) {
+  const text = (raw || '').trim();
+  if (!text) return '';
+  if (text.toLowerCase().replace(/[\s_-]/g, '') === 'nopair') {
+    return 'no pair';
+  }
+  const matches = text.match(/-?\d+/g);
+  if (!matches || matches.length < 2) return text.toLowerCase();
+  const n1 = parseInt(matches[0], 10);
+  const n2 = parseInt(matches[1], 10);
+  const big = Math.max(n1, n2);
+  const small = Math.min(n1, n2);
+  return `(${big}, ${small})`;
+}
+
+/**
  * Helper to normalize interval list outputs (e.g., "[[9, 12], [13, 14]]" or "9 12\n13 14")
  */
 function normalizeIntervalOutput(raw) {
@@ -447,6 +465,14 @@ const server = http.createServer(async (req, res) => {
           const normActual = normalizeMatrixOutput(execResult.stdout);
           const normExpected = normalizeMatrixOutput(testCase.expected);
           passed = (normActual === normExpected) && (execResult.exitCode === 0);
+        } else if (problem.id === 12) {
+          const normActual = normalizeBigSmallPairOutput(execResult.stdout);
+          const normExpected = normalizeBigSmallPairOutput(testCase.expected);
+          passed = (normActual === normExpected) && (execResult.exitCode === 0);
+        } else if (problem.id === 13) {
+          const cleanActual = (execResult.stdout || '').trim();
+          const cleanExpected = testCase.expected.trim();
+          passed = (cleanActual === cleanExpected) && (execResult.exitCode === 0);
         } else {
           const cleanActual = (execResult.stdout || '').trim().toLowerCase();
           const cleanExpected = testCase.expected.trim().toLowerCase();

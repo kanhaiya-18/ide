@@ -132,7 +132,7 @@
       if (res.ok) {
         allProblemsList = await res.json();
       } else {
-        allProblemsList = Array.from({ length: 11 }, (_, i) => ({
+        allProblemsList = Array.from({ length: 13 }, (_, i) => ({
           id: i + 1,
           title: `Question ${i + 1}`,
           difficulty: i < 2 ? 'EASY' : i < 6 ? 'MEDIUM' : i < 8 ? 'MEDIUM-HARD' : 'HARD',
@@ -820,7 +820,7 @@
       const match = window.location.hash.match(/q=(\d+)/);
       if (match && match[1]) {
         const id = parseInt(match[1], 10);
-        if (id !== currentProblemId && id >= 1 && id <= (allProblemsList.length || 11)) {
+        if (id !== currentProblemId && id >= 1 && id <= (allProblemsList.length || 13)) {
           switchProblem(id);
         }
       }

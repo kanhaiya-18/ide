@@ -941,6 +941,233 @@ public class Solution {
         expected: "3"
       }
     ]
+  },
+  {
+    id: 12,
+    title: "Question 12 — Target Sum Pair with Maximum Product",
+    difficulty: "EASY-MEDIUM",
+    concept: "Two Pointers, Hash Map & Math",
+    description: "Given an integer array nums and a target value T, find all pairs of elements (a, b) such that a + b = T. Among all such pairs, select the pair that produces the MAXIMUM product (a * b). Output the winning pair in the format (big, small), where big >= small. If no valid pair sums to T, print 'No Pair'.",
+    inputSpec: [
+      "Line 1: Space-separated integers representing the array nums.",
+      "Line 2: An integer T representing the target sum."
+    ],
+    outputSpec: "Print the pair with maximum product formatted as (big, small). If no pair exists, print 'No Pair'.",
+    examples: [
+      {
+        input: "1 4 3 6 7 2 5\n8",
+        output: "(5, 3)",
+        explanation: "Pairs with sum 8 are (1, 7) [product 7], (2, 6) [product 12], and (3, 5) [product 15]. The maximum product is 15 from (3, 5). Formatted as (big, small) -> (5, 3)."
+      },
+      {
+        input: "2 4 8 1 9 3\n11",
+        output: "(8, 3)",
+        explanation: "Pairs with sum 11 are (2, 9) [product 18] and (8, 3) [product 24]. The maximum product is 24. Formatted as (big, small) -> (8, 3)."
+      },
+      {
+        input: "-4 -1 2 5 -2 7\n3",
+        output: "(5, -2)",
+        explanation: "Pairs with sum 3 are (-4, 7) [product -28] and (5, -2) [product -10]. -10 is greater than -28. Formatted as (big, small) -> (5, -2)."
+      }
+    ],
+    constraints: [
+      "2 <= length of nums <= 100,000",
+      "-100,000 <= nums[i] <= 100,000",
+      "-200,000 <= T <= 200,000",
+      "Elements in a pair must come from distinct array indices (i != j)"
+    ],
+    starterCode: {
+      python: `import sys
+
+def main():
+    # Read input from standard input:
+    # Line 1: Space-separated integers representing nums
+    # Line 2: An integer T representing target sum
+    lines = sys.stdin.read().splitlines()
+    if not lines:
+        return
+    
+    nums = list(map(int, lines[0].strip().split()))
+    T = int(lines[1].strip())
+
+    # TODO: Write your solution from scratch
+    # Find all pairs (a, b) such that a + b == T
+    # Among those, pick the pair with maximum product (a * b)
+    # Print formatted as (big, small) -> e.g. (5, 3)
+    # If no pair exists, print "No Pair"
+    pass
+
+if __name__ == '__main__':
+    main()
+`,
+      java: `import java.util.*;
+import java.io.*;
+
+public class Solution {
+    public static void main(String[] args) throws Exception {
+        // Read input from standard input:
+        // Line 1: Space-separated integers representing nums
+        // Line 2: An integer T representing target sum
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        String line1 = br.readLine();
+        if (line1 == null || line1.trim().isEmpty()) return;
+        String line2 = br.readLine();
+        if (line2 == null || line2.trim().isEmpty()) return;
+
+        String[] parts = line1.trim().split("\\s+");
+        int[] nums = new int[parts.length];
+        for (int i = 0; i < parts.length; i++) {
+            nums[i] = Integer.parseInt(parts[i]);
+        }
+        int T = Integer.parseInt(line2.trim());
+
+        // TODO: Write your solution from scratch
+        // Find all pairs (a, b) such that a + b == T
+        // Among those, pick the pair with maximum product (a * b)
+        // Print formatted as (big, small) -> e.g. (5, 3)
+        // If no pair exists, print "No Pair"
+    }
+}
+`
+    },
+    tests: [
+      {
+        name: "Test Case 1 (Example 1: Positive Array)",
+        input: "1 4 3 6 7 2 5\n8",
+        expected: "(5, 3)"
+      },
+      {
+        name: "Test Case 2 (Example 2: Multiple Candidate Pairs)",
+        input: "2 4 8 1 9 3\n11",
+        expected: "(8, 3)"
+      },
+      {
+        name: "Test Case 3 (Negative Numbers & Higher Product)",
+        input: "-4 -1 2 5 -2 7\n3",
+        expected: "(5, -2)"
+      },
+      {
+        name: "Test Case 4 (Identical Numbers / Duplicates)",
+        input: "5 2 9 5 1\n10",
+        expected: "(5, 5)"
+      },
+      {
+        name: "Test Case 5 (No Valid Pair Exists)",
+        input: "1 2 3 4\n20",
+        expected: "No Pair"
+      },
+      {
+        name: "Test Case 6 (Zero Included)",
+        input: "0 10 2 8 4 6\n10",
+        expected: "(6, 4)"
+      }
+    ]
+  },
+  {
+    id: 13,
+    title: "Question 13 — Alternating Pattern Scanner with Skip Jumps",
+    difficulty: "EASY-MEDIUM",
+    concept: "String Parsing & State Machine Scanner",
+    description: "You are implementing a string traversal scanner that moves through a string looking for a strictly alternating pattern of character pairs, following precise skipping rules.\n\nCore Rules:\n1. Active Condition / State:\n   - State 1: A letter followed by a digit ([a-zA-Z][0-9]). The scanner always starts in State 1.\n   - State 2: A digit followed by a letter ([0-9][a-zA-Z]).\n   - Every time a match is found, the state alternates to the other state.\n\n2. Match Action:\n   - If characters at index j and j+1 match the active condition:\n     * Append both characters to the output.\n     * Skip the character immediately following the pair (index j+2).\n     * Move the scanner to index j+3 to resume scanning.\n\n3. Miss Action:\n   - If characters at index j and j+1 do NOT match the active condition:\n     * Advance the scanner forward by one space (to index j+1) and check again.",
+    inputSpec: [
+      "Line 1: A single string S containing letters, digits, and/or symbols."
+    ],
+    outputSpec: "Print the final concatenated output string of matched pairs. If no matching pairs are found, print an empty line.",
+    examples: [
+      {
+        input: "a1b2c3d4",
+        output: "a12cd4",
+        explanation: "At j=0 ('a1'): matches State 1 (Letter-Digit). Output becomes 'a1'. Skip 'b' at idx 2, jump to j=3. State flips to State 2.\nAt j=3 ('2c'): matches State 2 (Digit-Letter). Output becomes 'a12c'. Skip '3' at idx 5, jump to j=6. State flips to State 1.\nAt j=6 ('d4'): matches State 1 (Letter-Digit). Output becomes 'a12cd4'. Scanner reaches end of string."
+      },
+      {
+        input: "abc123d4e5",
+        output: "c13de5",
+        explanation: "j=0 ('ab') miss -> j=1 ('bc') miss -> j=2 ('c1') matches State 1. Output 'c1', skip '2' (idx 4), jump to j=5, switch to State 2.\nj=5 ('3d') matches State 2. Output 'c13d', skip '4' (idx 7), jump to j=8, switch to State 1.\nj=8 ('e5') matches State 1. Output 'c13de5'."
+      },
+      {
+        input: "x9y8z7",
+        output: "x98z",
+        explanation: "j=0 ('x9') matches State 1. Output 'x9', skip 'y' (idx 2), jump to j=3, switch to State 2.\nj=3 ('8z') matches State 2. Output 'x98z', skip '7' (idx 5), jump to j=6 (end)."
+      }
+    ],
+    constraints: [
+      "1 <= length of S <= 100,000",
+      "S contains printable characters without whitespace"
+    ],
+    starterCode: {
+      python: `import sys
+
+def main():
+    # Read input from standard input:
+    # Line 1: A single string S
+    raw = sys.stdin.read().splitlines()
+    if not raw:
+        return
+    s = raw[0].strip()
+
+    # TODO: Write your solution from scratch
+    # Implement the scanner state machine:
+    # State 1: [Letter][Digit] -> append, skip idx+2, jump to idx+3, switch to State 2
+    # State 2: [Digit][Letter] -> append, skip idx+2, jump to idx+3, switch to State 1
+    # Miss: advance by 1
+    pass
+
+if __name__ == '__main__':
+    main()
+`,
+      java: `import java.util.*;
+import java.io.*;
+
+public class Solution {
+    public static void main(String[] args) throws Exception {
+        // Read input from standard input:
+        // Line 1: A single string S
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        String s = br.readLine();
+        if (s == null) return;
+        s = s.trim();
+
+        // TODO: Write your solution from scratch
+        // Implement the scanner state machine:
+        // State 1: [Letter][Digit] -> append, skip idx+2, jump to idx+3, switch to State 2
+        // State 2: [Digit][Letter] -> append, skip idx+2, jump to idx+3, switch to State 1
+        // Miss: advance by 1
+    }
+}
+`
+    },
+    tests: [
+      {
+        name: "Test Case 1 (Example 1: Standard Alternation)",
+        input: "a1b2c3d4",
+        expected: "a12cd4"
+      },
+      {
+        name: "Test Case 2 (Example 2: Miss Traversal with Recovery)",
+        input: "abc123d4e5",
+        expected: "c13de5"
+      },
+      {
+        name: "Test Case 3 (Example 3: Truncated Jumps at End)",
+        input: "x9y8z7",
+        expected: "x98z"
+      },
+      {
+        name: "Test Case 4 (Single Pair Minimal Match)",
+        input: "k9",
+        expected: "k9"
+      },
+      {
+        name: "Test Case 5 (All Letters / No Digit Matches)",
+        input: "abcdefghij",
+        expected: ""
+      },
+      {
+        name: "Test Case 6 (Miss Handling After State Flip)",
+        input: "m33p4q",
+        expected: "m34q"
+      }
+    ]
   }
 ];
 
