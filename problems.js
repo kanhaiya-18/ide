@@ -1168,6 +1168,111 @@ public class Solution {
         expected: "m34q"
       }
     ]
+  },
+  {
+    id: 14,
+    title: "Question 14 — K-th Number Without Digit 7",
+    difficulty: "EASY-MEDIUM",
+    concept: "Base-9 Number System / Math & Radix Conversion",
+    description: "You are given a positive integer K. Consider the sequence of positive integers starting from 1, but completely excluding every number that contains the digit '7' anywhere.\n\nFor example, the sequence begins:\n1, 2, 3, 4, 5, 6, 8, 9, 10, 11, 12, 13, 14, 15, 16, 18, 19, 20, 21, ...\n(Notice that 7, 17, 27, 70-79, 107, etc. are omitted).\n\nGiven K, find and print the K-th number in this sequence.",
+    inputSpec: [
+      "Line 1: A single positive integer K."
+    ],
+    outputSpec: "Print a single integer representing the K-th number in the sequence without the digit 7.",
+    examples: [
+      {
+        input: "7",
+        output: "8",
+        explanation: "The first 7 numbers in the sequence are 1, 2, 3, 4, 5, 6, 8. The 7th term is 8 (7 is excluded)."
+      },
+      {
+        input: "18",
+        output: "20",
+        explanation: "The sequence terms up to the 18th term: 1..6 (6 numbers), 8..16 (9 numbers), 18..20 (3 numbers). Total count is 6 + 9 + 3 = 18 terms. The 18th term is 20 (7 and 17 are excluded)."
+      },
+      {
+        input: "65",
+        output: "82",
+        explanation: "65 in base-9 is 72_9. Mapping digit 7 to 8 gives 82."
+      }
+    ],
+    constraints: [
+      "1 <= K <= 10^12",
+      "K fits within standard 64-bit integer limits"
+    ],
+    starterCode: {
+      python: `import sys
+
+def main():
+    # Read input from standard input:
+    # Line 1: A single integer K
+    raw = sys.stdin.read().strip()
+    if not raw:
+        return
+    K = int(raw)
+
+    # TODO: Write your solution from scratch
+    # Find the K-th number in the sequence without digit 7
+    pass
+
+if __name__ == '__main__':
+    main()
+`,
+      java: `import java.util.*;
+import java.io.*;
+
+public class Solution {
+    public static void main(String[] args) throws Exception {
+        // Read input from standard input:
+        // Line 1: A single integer K
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        String line = br.readLine();
+        if (line == null || line.trim().isEmpty()) return;
+        long K = Long.parseLong(line.trim());
+
+        // TODO: Write your solution from scratch
+        // Find the K-th number in the sequence without digit 7
+    }
+}
+`
+    },
+    tests: [
+      {
+        name: "Test Case 1 (Example 1: Skips 7 to 8)",
+        input: "7",
+        expected: "8"
+      },
+      {
+        name: "Test Case 2 (Example 2: Crosses 7 and 17 to 20)",
+        input: "18",
+        expected: "20"
+      },
+      {
+        name: "Test Case 3 (Minimal Input: 1st Term)",
+        input: "1",
+        expected: "1"
+      },
+      {
+        name: "Test Case 4 (Pre-Skip Boundary: 6th Term)",
+        input: "6",
+        expected: "6"
+      },
+      {
+        name: "Test Case 5 (16th Term Skips 17 to 18)",
+        input: "16",
+        expected: "18"
+      },
+      {
+        name: "Test Case 6 (Higher Value: 100th Term)",
+        input: "100",
+        expected: "121"
+      },
+      {
+        name: "Test Case 7 (Large Value: 1000th Term)",
+        input: "1000",
+        expected: "1331"
+      }
+    ]
   }
 ];
 
